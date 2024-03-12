@@ -37,8 +37,8 @@ jobs:
    steps:
       - name: docker pull image
         run: docker pull sreedhar8897/zomato:latest
-      # - name: Image scan
-      #   run: trivy image sreedhar8897/zomato:latest > trivyimagedeploy.txt
+      - name: Image scan
+        run: trivy image sreedhar8897/zomato:latest > trivyimagedeploy.txt
       - name: Deploy to container
         run: docker run -d --name zomato -p 3000:3000 sreedhar8897/zomato:latest
       # - name: Update kubeconfig
