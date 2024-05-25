@@ -1,1 +1,41 @@
---
+name: build analyze, scan
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-analyze-scan:
+    name: build
+    runs: [self-hosted]
+    steps:
+      - name: checkout the code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: BUilding code and analyze with SonarQube
+        uses: actions/checkout@master
+        env:
+          SONAR_TOKEN: ${{ secret.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secret.SONAR_HOST_URL }}
+      - name: dependencies install
+        run: npm install
+      - name: trivy scan
+        run: trivy -fs . > trivy-report.txt
+      - name: docker build push
+        run: |
+          docker build -t zomato .
+          docker tag zomato manlineroot12/zomato:latest
+          docker login -u ${{ secret.DOCKER_USERNAME }} -p {{ secret.DOCKER_TOKEN }}
+          docker push manlineroot12/zomato:latest
+      - name: trivy scan image
+        run: trivy image manlineroot12/zomato:latest
+  deploy:
+    needs: build-analyze-scan
+    runs-on: [self-hosted]
+    steps:
+      - name: docker pull
+        run: docker pull manlineroot12/zomato:latest
+      - name: Image scan
+        run: trivy image manlineroot12/zomato:latest
+      - name: docker run -itd -p 3000:3000 --name zomato manlineroot12/zomato:latest
