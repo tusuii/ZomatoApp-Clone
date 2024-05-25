@@ -40,4 +40,4 @@ jobs:
       - name: Image scan
         run: trivy image manlineroot12/zomato:latest > image-trivy-scan.txt
       - name: run docker container
-        run: docker run -itd -p 3000:3000 --name zomato:latest manlineroot12/zomato:latest
+        run: docker run -itd -p 3000:3000 manlineroot12/zomato:latest
