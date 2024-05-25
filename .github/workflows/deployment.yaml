@@ -28,8 +28,8 @@ jobs:
           docker tag zomato manlineroot12/zomato:latest
           docker login -u ${{ secret.DOCKER_USERNAME }} -p {{ secret.DOCKER_TOKEN }}
           docker push manlineroot12/zomato:latest
-      - name: trivy scan image
-        run: trivy image manlineroot12/zomato:latest
+        env:
+          DOCKER_CLI_ACL: 1
   deploy:
     needs: build-analyze-scan
     runs-on: [self-hosted]
@@ -37,5 +37,5 @@ jobs:
       - name: docker pull
         run: docker pull manlineroot12/zomato:latest
       - name: Image scan
-        run: trivy image manlineroot12/zomato:latest
+        run: trivy image manlineroot12/zomato:latest > image-trivy-scan.txt
       - name: docker run -itd -p 3000:3000 --name zomato manlineroot12/zomato:latest
