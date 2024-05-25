@@ -16,8 +16,8 @@ jobs:
       - name: BUilding code and analyze with SonarQube
         uses: actions/checkout@master
         env:
-          SONAR_TOKEN: ${{ secret.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secret.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: dependencies install
         run: npm install
       - name: trivy scan
@@ -26,7 +26,7 @@ jobs:
         run: |
           docker build -t zomato .
           docker tag zomato manlineroot12/zomato:latest
-          docker login -u ${{ secret.DOCKER_USERNAME }} -p {{ secret.DOCKER_TOKEN }}
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p {{ secrets.DOCKER_TOKEN }}
           docker push manlineroot12/zomato:latest
         env:
           DOCKER_CLI_ACL: 1
