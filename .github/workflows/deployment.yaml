@@ -7,7 +7,7 @@ on:
 jobs:
   build-analyze-scan:
     name: build
-    runs-on: [self-hosted] 
+    runs-on: [self-hosted]
     steps:
       - name: checkout the code
         uses: actions/checkout@v4
