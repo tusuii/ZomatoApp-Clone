@@ -49,6 +49,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Update kubeconfig
-        run: aws eks --region us-east-1 update-kubeconfig --name Zomato-EKS-Cluster
+        run: aws eks --region us-east-1 update-kubeconfig --name 	Zomato-demo-cluster
       - name: Deploy to kubernetes
         run: kubectl apply -f deployment-service.yml
