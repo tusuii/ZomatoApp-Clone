@@ -41,7 +41,7 @@ jobs:
         run: trivy image manlineroot12/zomato:latest > image-trivy-scan.txt
       - name: run docker container
         run: docker run -itd -p 3000:3000 manlineroot12/zomato:latest
-          - name: Configure AWS credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
