@@ -41,3 +41,14 @@ jobs:
         run: trivy image manlineroot12/zomato:latest > image-trivy-scan.txt
       - name: run docker container
         run: docker run -itd -p 3000:3000 manlineroot12/zomato:latest
+          - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks --region us-east-1 update-kubeconfig --name Zomato-EKS-Cluster
+      - name: Deploy to kubernetes
+        run: kubectl apply -f deployment-service.yml
