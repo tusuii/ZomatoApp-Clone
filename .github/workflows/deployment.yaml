@@ -5,33 +5,6 @@ on:
       - main
 
 jobs:
-  build-analyze-scan:
-    name: build
-    runs-on: [self-hosted]
-    steps:
-      - name: checkout the code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: BUilding code and analyze with SonarQube
-        uses: actions/checkout@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      - name: dependencies install
-        run: |
-          npm install
-
-      - name: trivy scan
-        run: trivy fs .
-      - name: docker build push
-        run: |
-          docker build -t zomato .
-          docker tag zomato manlineroot12/zomato:latest
-          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          docker push manlineroot12/zomato:latest
-        env:
-          DOCKER_CLI_ACL: 1
   deploy:
     name: deploy app to docker
     needs: build-analyze-scan
