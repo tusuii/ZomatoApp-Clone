@@ -49,8 +49,23 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+      - name: Test EKS API connectivity
+        run: |
+          ENDPOINT=$(aws eks describe-cluster --name test --region ap-south-1 --query "cluster.endpoint" --output text)
+          curl -v $ENDPOINT
+          
+      - name: Debugging info
+        run: |
+          kubectl version
+          kubectl config view
+          kubectl cluster-info
+          kubectl get nodes
 
       - name: Update kubeconfig
-        run: aws eks --region ap-south-1 update-kubeconfig --name test
-      - name: Deploy to kubernetes
-        run: kubectl apply -f deployment-service.yml --validate=false
+        run: aws eks update-kubeconfig --name test --region ap-south-1
+      - name: Apply Kubernetes manifests
+        run: |
+          for i in {1..5}; do
+          kubectl apply -f deployment-service.yml --validate=false && break
+          sleep 10
+          done
