@@ -21,14 +21,6 @@ jobs:
       - name: dependencies install
         run: |
           npm install
-      - name: docker build push
-        run: |
-          docker build -t zomato .
-          docker tag zomato manlineroot12/zomato:latest
-          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          docker push manlineroot12/zomato:latest
-        env:
-          DOCKER_CLI_ACL: 1
   deploy:
     name: deploy app to docker
     needs: build-analyze-scan
