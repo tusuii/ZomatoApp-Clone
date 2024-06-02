@@ -7,7 +7,7 @@ on:
 jobs:
   build-analyze-scan:
     name: build
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: checkout the code
         uses: actions/checkout@v4
@@ -21,9 +21,6 @@ jobs:
       - name: dependencies install
         run: |
           npm install
-
-      - name: trivy scan
-        run: trivy fs .
       - name: docker build push
         run: |
           docker build -t zomato .
@@ -35,12 +32,10 @@ jobs:
   deploy:
     name: deploy app to docker
     needs: build-analyze-scan
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
       - name: docker pull
         run: docker pull manlineroot12/zomato:latest
-      - name: Image scan
-        run: trivy image manlineroot12/zomato:latest > image-trivy-scan.txt
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
