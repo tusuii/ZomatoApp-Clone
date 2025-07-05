@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: zomato
-        image: manlineroot12/zomato:latest
+        image: subkamble/zomato:latest
         ports:
         - containerPort: 3000   # Use port 3000
 
