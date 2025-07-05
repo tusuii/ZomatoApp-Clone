@@ -1,4 +1,4 @@
-name: build analyze, scan deploy
+name: build analyze, scan deplooy
 on:
   push:
     branches:
